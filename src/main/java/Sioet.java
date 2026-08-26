@@ -42,7 +42,7 @@ public class Sioet {
             String command = scanner.nextLine();
 
             if (command.equals("bye")) {
-                System.out.println(BLUE + "Bye！ Hope to see you again soon!" + RESET);
+                System.out.println(BLUE + "Bye！dead Hope to see you again soon!" + RESET);
                 break;
             }
 
@@ -52,34 +52,91 @@ public class Sioet {
                 markTasks(command.substring("mark ".length()), true);
             } else if (command.startsWith("unmark ")) {
                 markTasks(command.substring("unmark ".length()), false);
+            } else if (command.startsWith("todo ")) {
+                addTodo(command.substring("todo ".length()));
+            } else if (command.startsWith("deadline ")) {
+                addDeadline(command.substring("deadline ".length()));
+            } else if (command.startsWith("event ")) {
+                addEvent(command.substring("event ".length()));
             } else {
-                addTask(command);
+                System.out.println(BLUE + "I don't understand that command yet." + RESET);
             }
         }
     }
 
     /**
-     * Stores a task entered by the user and confirms that it was added.
+     * Creates and stores a todo task.
      *
-     * @param task the text to store as a task
+     * @param description the todo description
      */
-    private static void addTask(String task) {
+    private static void addTodo(String description) {
+        if (description.isBlank()) {
+            System.out.println(BLUE + "Please provide a description for the todo." + RESET);
+            return;
+        }
+        addTask(new Todo(description.trim()));
+    }
+
+    /**
+     * Creates and stores a deadline task from text in the form {@code description /by due date}.
+     *
+     * @param taskText the deadline details entered by the user
+     */
+    private static void addDeadline(String taskText) {
+        int byMarkerIndex = taskText.indexOf(" /by ");
+        if (byMarkerIndex < 1 || byMarkerIndex + " /by ".length() >= taskText.length()) {
+            System.out.println(BLUE + "Use: deadline DESCRIPTION /by DATE" + RESET);
+            return;
+        }
+        String description = taskText.substring(0, byMarkerIndex).trim();
+        String by = taskText.substring(byMarkerIndex + " /by ".length()).trim();
+        addTask(new Deadline(description, by));
+    }
+
+    /**
+     * Creates and stores an event task from text in the form
+     * {@code description /from start /to end}.
+     *
+     * @param taskText the event details entered by the user
+     */
+    private static void addEvent(String taskText) {
+        int fromMarkerIndex = taskText.indexOf(" /from ");
+        int toMarkerIndex = taskText.indexOf(" /to ");
+        if (fromMarkerIndex < 1 || toMarkerIndex <= fromMarkerIndex + " /from ".length()
+                || toMarkerIndex + " /to ".length() >= taskText.length()) {
+            System.out.println(BLUE + "Use: event DESCRIPTION /from START /to END" + RESET);
+            return;
+        }
+        String description = taskText.substring(0, fromMarkerIndex).trim();
+        String from = taskText.substring(fromMarkerIndex + " /from ".length(), toMarkerIndex).trim();
+        String to = taskText.substring(toMarkerIndex + " /to ".length()).trim();
+        addTask(new Event(description, from, to));
+    }
+
+    /**
+     * Stores a task and confirms that it was added.
+     *
+     * @param task the task to store
+     */
+    private static void addTask(Task task) {
         if (taskCount == MAX_TASKS) {
             System.out.println(BLUE + "Sorry, the task list is full." + RESET);
             return;
         }
 
-        tasks[taskCount] = new Task(task);
+        tasks[taskCount] = task;
         taskCount++;
-        System.out.println(BLUE + "added: " + task + RESET);
+        System.out.println(BLUE + "Got it. I've added this task:\n  " + task
+                + "\nNow you have " + taskCount + " tasks in the list." + RESET);
     }
 
     /**
      * Displays every stored task in the order it was entered.
      */
     private static void printTasks() {
+        System.out.println(BLUE + "Here are the tasks in your list:" + RESET);
         for (int index = 0; index < taskCount; index++) {
-            System.out.println(BLUE + (index + 1) + ". " + tasks[index] + RESET);
+            System.out.println(BLUE + (index + 1) + "." + tasks[index] + RESET);
         }
     }
 

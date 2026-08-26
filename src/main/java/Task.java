@@ -2,7 +2,7 @@
  * Represents one task in the task list.
  * A task has a description and can be marked as completed or incomplete.
  */
-public class Task {
+public abstract class Task {
     private final String description;
     private boolean isDone;
 
@@ -40,13 +40,38 @@ public class Task {
     }
 
     /**
+     * Returns this task's description for subclasses that add task-specific details.
+     *
+     * @return the task description
+     */
+    protected String getDescription() {
+        return description;
+    }
+
+    /**
+     * Returns the one-letter code used to identify this kind of task.
+     *
+     * @return the task type code
+     */
+    protected abstract String getTaskType();
+
+    /**
+     * Returns any extra text displayed after the description.
+     *
+     * @return task-specific display details
+     */
+    protected String getDetails() {
+        return "";
+    }
+
+    /**
      * Returns this task in the format used in task lists.
      *
-     * @return the completion marker followed by the task description
+     * @return the type marker, completion marker, description, and task details
      */
     @Override
     public String toString() {
         String status = isDone ? "X" : " ";
-        return "[" + status + "] " + description;
+        return "[" + getTaskType() + "][" + status + "] " + description + getDetails();
     }
 }
