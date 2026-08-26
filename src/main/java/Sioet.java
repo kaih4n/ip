@@ -1,15 +1,15 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Starts the Sioet chatbot application.
  */
 public class Sioet {
-    private static final int MAX_TASKS = 100;
     private static final String BLUE = "\u001B[34m";
     private static final String GREEN = "\u001B[32m";
     private static final String RESET = "\u001B[0m";
-    private static final Task[] tasks = new Task[MAX_TASKS];
-    private static int taskCount = 0;
+    private static final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Displays the Sioet welcome banner.
@@ -73,6 +73,8 @@ public class Sioet {
             addDeadline(command.substring("deadline".length()).trim());
         } else if (command.equals("event") || command.startsWith("event ")) {
             addEvent(command.substring("event".length()).trim());
+        } else if (command.equals("delete") || command.startsWith("delete ")) {
+            deleteTask(command.substring("delete".length()).trim());
         } else {
             throw new SioetException("I don't recognise that command. Try list, todo, deadline, event, mark, or unmark.");
         }
@@ -129,24 +131,78 @@ public class Sioet {
      *
      * @param task the task to store
      */
-    private static void addTask(Task task) throws SioetException {
-        if (taskCount == MAX_TASKS) {
-            throw new SioetException("Your task list is full. Remove a task before adding another one.");
+    private static void addTask(Task task) {
+        tasks.add(task);
+
+        System.out.println(BLUE + "Got it. I've added this task:\n  " + task
+                + "\nNow you have " + tasks.size() + " tasks in the list." + RESET);
+    }
+
+    /**
+     * Deletes one or more tasks using their one-based list numbers.
+     *
+     * @param taskNumbersText comma-separated task numbers supplied after a command
+     */
+    private static void deleteTask(String taskNumbersText) throws SioetException {
+        if (taskNumbersText.isBlank()) {
+            throw new SioetException("Provide at least one task number. Example: delete 1, 2");
         }
 
-        tasks[taskCount] = task;
-        taskCount++;
-        System.out.println(BLUE + "Got it. I've added this task:\n  " + task
-                + "\nNow you have " + taskCount + " tasks in the list." + RESET);
+        String[] taskNumberTexts = taskNumbersText.split(",", -1);
+        int[] taskIndexes = new int[taskNumberTexts.length];
+
+        for (int index = 0; index < taskNumberTexts.length; index++) {
+            try {
+                taskIndexes[index] =
+                        Integer.parseInt(taskNumberTexts[index].trim()) - 1;
+            } catch (NumberFormatException exception) {
+                throw new SioetException("Task numbers must be whole numbers separated by commas.");
+            }
+
+            if (taskIndexes[index] < 0
+                    || taskIndexes[index] >= tasks.size()) {
+                throw new SioetException("One or more task numbers are not in your list.");
+            }
+        }
+
+        StringBuilder deletedTasks = new StringBuilder();
+
+        /*
+         * Delete from the largest index to the smallest index.
+         * This prevents deleting one task from changing the index
+         * of another task that we still need to delete.
+         */
+        Arrays.sort(taskIndexes);
+
+        for (int index = taskIndexes.length - 1; index >= 0; index--) {
+            Task deletedTask = tasks.remove(taskIndexes[index]);
+            deletedTasks.insert(0, deletedTask + "\n");
+        }
+
+        String message;
+        if (taskIndexes.length == 1) {
+            message = "Noted. I've removed this task:\n\n";
+        } else {
+            message = "Noted. I've removed these tasks:\n\n";
+        }
+
+        System.out.println(BLUE
+                + message
+                + deletedTasks.toString().trim()
+                + "\nNow you have "
+                + tasks.size()
+                + " tasks in the list."
+                + RESET);
     }
+
 
     /**
      * Displays every stored task in the order it was entered.
      */
     private static void printTasks() {
         System.out.println(BLUE + "Here are the tasks in your list:" + RESET);
-        for (int index = 0; index < taskCount; index++) {
-            System.out.println(BLUE + (index + 1) + "." + tasks[index] + RESET);
+        for (int index = 0; index < tasks.size(); index++) {
+            System.out.println(BLUE + (index + 1) + "." + tasks.get(index) + RESET);
         }
     }
 
@@ -170,14 +226,14 @@ public class Sioet {
                 throw new SioetException("Task numbers must be whole numbers separated by commas.");
             }
 
-            if (taskIndexes[index] < 0 || taskIndexes[index] >= taskCount) {
+            if (taskIndexes[index] < 0 || taskIndexes[index] >= tasks.size()) {
                 throw new SioetException("One or more task numbers are not in your list.");
             }
         }
 
         StringBuilder markedTasks = new StringBuilder();
         for (int taskIndex : taskIndexes) {
-            Task task = tasks[taskIndex];
+            Task task = tasks.get(taskIndex);
             if (shouldMarkDone) {
                 task.markAsDone();
             } else {
