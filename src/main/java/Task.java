@@ -1,9 +1,10 @@
 /**
  * Represents one task in the task list.
- * A task has a description and is initially incomplete.
+ * A task has a description and can be marked as completed or incomplete.
  */
 public class Task {
     private final String description;
+    private boolean isDone;
 
     /**
      * Creates an incomplete task with the given description.
@@ -12,15 +13,40 @@ public class Task {
      */
     public Task(String description) {
         this.description = description;
+        this.isDone = false;
+    }
+
+    /**
+     * Marks this task as completed.
+     */
+    public void markAsDone() {
+        isDone = true;
+    }
+
+    /**
+     * Marks this task as incomplete.
+     */
+    public void markAsNotDone() {
+        isDone = false;
+    }
+
+    /**
+     * Returns whether this task has been completed.
+     *
+     * @return {@code true} when the task is completed; otherwise {@code false}
+     */
+    public boolean isDone() {
+        return isDone;
     }
 
     /**
      * Returns this task in the format used in task lists.
      *
-     * @return the incomplete-task marker followed by the task description
+     * @return the completion marker followed by the task description
      */
     @Override
     public String toString() {
-        return "[ ] " + description;
+        String status = isDone ? "X" : " ";
+        return "[" + status + "] " + description;
     }
 }

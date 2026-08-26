@@ -48,6 +48,10 @@ public class Sioet {
 
             if (command.equals("list")) {
                 printTasks();
+            } else if (command.startsWith("mark ")) {
+                markTasks(command.substring("mark ".length()), true);
+            } else if (command.startsWith("unmark ")) {
+                markTasks(command.substring("unmark ".length()), false);
             } else {
                 addTask(command);
             }
@@ -77,6 +81,54 @@ public class Sioet {
         for (int index = 0; index < taskCount; index++) {
             System.out.println(BLUE + (index + 1) + ". " + tasks[index] + RESET);
         }
+    }
+
+    /**
+     * Changes one or more tasks' completion states using their one-based list numbers.
+     *
+     * @param taskNumbersText comma-separated task numbers supplied after a command
+     * @param shouldMarkDone whether the task should be completed
+     */
+    private static void markTasks(String taskNumbersText, boolean shouldMarkDone) {
+        String[] taskNumberTexts = taskNumbersText.split(",", -1);
+        int[] taskIndexes = new int[taskNumberTexts.length];
+
+        for (int index = 0; index < taskNumberTexts.length; index++) {
+            try {
+                taskIndexes[index] = Integer.parseInt(taskNumberTexts[index].trim()) - 1;
+            } catch (NumberFormatException exception) {
+                System.out.println(BLUE + "Please provide valid task numbers separated by commas." + RESET);
+                return;
+            }
+
+            if (taskIndexes[index] < 0 || taskIndexes[index] >= taskCount) {
+                System.out.println(BLUE + "One or more task numbers do not exist." + RESET);
+                return;
+            }
+        }
+
+        StringBuilder markedTasks = new StringBuilder();
+        for (int taskIndex : taskIndexes) {
+            Task task = tasks[taskIndex];
+            if (shouldMarkDone) {
+                task.markAsDone();
+            } else {
+                task.markAsNotDone();
+            }
+            markedTasks.append(task).append('\n');
+        }
+
+        String message;
+        if (taskIndexes.length == 1) {
+            message = shouldMarkDone
+                    ? "Nice! I've marked this task as done:\n\n"
+                    : "OK, I've marked this task as not done yet:\n\n";
+        } else {
+            message = shouldMarkDone
+                    ? "Nice! I've marked these tasks as done:\n\n"
+                    : "OK, I've marked these tasks as not done yet:\n\n";
+        }
+        System.out.println(BLUE + message + markedTasks.toString().trim() + RESET);
     }
 
     /**
