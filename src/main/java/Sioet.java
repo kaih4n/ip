@@ -42,25 +42,39 @@ public class Sioet {
             String command = scanner.nextLine();
 
             if (command.equals("bye")) {
-                System.out.println(BLUE + "Bye！dead Hope to see you again soon!" + RESET);
+                System.out.println(BLUE + "Bye! Hope to see you again soon!" + RESET);
                 break;
             }
 
-            if (command.equals("list")) {
-                printTasks();
-            } else if (command.startsWith("mark ")) {
-                markTasks(command.substring("mark ".length()), true);
-            } else if (command.startsWith("unmark ")) {
-                markTasks(command.substring("unmark ".length()), false);
-            } else if (command.startsWith("todo ")) {
-                addTodo(command.substring("todo ".length()));
-            } else if (command.startsWith("deadline ")) {
-                addDeadline(command.substring("deadline ".length()));
-            } else if (command.startsWith("event ")) {
-                addEvent(command.substring("event ".length()));
-            } else {
-                System.out.println(BLUE + "I don't understand that command yet." + RESET);
+            try {
+                handleCommand(command);
+            } catch (SioetException exception) {
+                System.out.println(BLUE + "I couldn't do that: " + exception.getMessage() + RESET);
             }
+        }
+    }
+
+    /**
+     * Interprets and carries out one user command.
+     *
+     * @param command the command entered by the user
+     * @throws SioetException if the command is unknown or contains invalid details
+     */
+    private static void handleCommand(String command) throws SioetException {
+        if (command.equals("list")) {
+            printTasks();
+        } else if (command.equals("mark") || command.startsWith("mark ")) {
+            markTasks(command.substring("mark".length()).trim(), true);
+        } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+            markTasks(command.substring("unmark".length()).trim(), false);
+        } else if (command.equals("todo") || command.startsWith("todo ")) {
+            addTodo(command.substring("todo".length()).trim());
+        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+            addDeadline(command.substring("deadline".length()).trim());
+        } else if (command.equals("event") || command.startsWith("event ")) {
+            addEvent(command.substring("event".length()).trim());
+        } else {
+            throw new SioetException("I don't recognise that command. Try list, todo, deadline, event, mark, or unmark.");
         }
     }
 
@@ -69,12 +83,11 @@ public class Sioet {
      *
      * @param description the todo description
      */
-    private static void addTodo(String description) {
+    private static void addTodo(String description) throws SioetException {
         if (description.isBlank()) {
-            System.out.println(BLUE + "Please provide a description for the todo." + RESET);
-            return;
+            throw new SioetException("use: todo DESCRIPTION. Example: todo read chapter 5");
         }
-        addTask(new Todo(description.trim()));
+        addTask(new Todo(description));
     }
 
     /**
@@ -82,11 +95,10 @@ public class Sioet {
      *
      * @param taskText the deadline details entered by the user
      */
-    private static void addDeadline(String taskText) {
+    private static void addDeadline(String taskText) throws SioetException {
         int byMarkerIndex = taskText.indexOf(" /by ");
         if (byMarkerIndex < 1 || byMarkerIndex + " /by ".length() >= taskText.length()) {
-            System.out.println(BLUE + "Use: deadline DESCRIPTION /by DATE" + RESET);
-            return;
+            throw new SioetException("use: deadline DESCRIPTION /by DATE. Example: deadline final project /by 01/02/34");
         }
         String description = taskText.substring(0, byMarkerIndex).trim();
         String by = taskText.substring(byMarkerIndex + " /by ".length()).trim();
@@ -99,13 +111,12 @@ public class Sioet {
      *
      * @param taskText the event details entered by the user
      */
-    private static void addEvent(String taskText) {
+    private static void addEvent(String taskText) throws SioetException {
         int fromMarkerIndex = taskText.indexOf(" /from ");
         int toMarkerIndex = taskText.indexOf(" /to ");
         if (fromMarkerIndex < 1 || toMarkerIndex <= fromMarkerIndex + " /from ".length()
                 || toMarkerIndex + " /to ".length() >= taskText.length()) {
-            System.out.println(BLUE + "Use: event DESCRIPTION /from START /to END" + RESET);
-            return;
+            throw new SioetException("use: event DESCRIPTION /from START /to END. Example: event birthday party /from 7pm /to 11pm");
         }
         String description = taskText.substring(0, fromMarkerIndex).trim();
         String from = taskText.substring(fromMarkerIndex + " /from ".length(), toMarkerIndex).trim();
@@ -118,10 +129,9 @@ public class Sioet {
      *
      * @param task the task to store
      */
-    private static void addTask(Task task) {
+    private static void addTask(Task task) throws SioetException {
         if (taskCount == MAX_TASKS) {
-            System.out.println(BLUE + "Sorry, the task list is full." + RESET);
-            return;
+            throw new SioetException("Your task list is full. Remove a task before adding another one.");
         }
 
         tasks[taskCount] = task;
@@ -146,7 +156,10 @@ public class Sioet {
      * @param taskNumbersText comma-separated task numbers supplied after a command
      * @param shouldMarkDone whether the task should be completed
      */
-    private static void markTasks(String taskNumbersText, boolean shouldMarkDone) {
+    private static void markTasks(String taskNumbersText, boolean shouldMarkDone) throws SioetException {
+        if (taskNumbersText.isBlank()) {
+            throw new SioetException("Provide at least one task number. Example: mark 1, 2");
+        }
         String[] taskNumberTexts = taskNumbersText.split(",", -1);
         int[] taskIndexes = new int[taskNumberTexts.length];
 
@@ -154,13 +167,11 @@ public class Sioet {
             try {
                 taskIndexes[index] = Integer.parseInt(taskNumberTexts[index].trim()) - 1;
             } catch (NumberFormatException exception) {
-                System.out.println(BLUE + "Please provide valid task numbers separated by commas." + RESET);
-                return;
+                throw new SioetException("Task numbers must be whole numbers separated by commas.");
             }
 
             if (taskIndexes[index] < 0 || taskIndexes[index] >= taskCount) {
-                System.out.println(BLUE + "One or more task numbers do not exist." + RESET);
-                return;
+                throw new SioetException("One or more task numbers are not in your list.");
             }
         }
 
