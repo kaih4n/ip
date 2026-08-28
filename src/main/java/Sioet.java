@@ -133,6 +133,7 @@ public class Sioet {
      */
     private static void addTask(Task task) {
         tasks.add(task);
+        Storage.save(tasks);
 
         System.out.println(BLUE + "Got it. I've added this task:\n  " + task
                 + "\nNow you have " + tasks.size() + " tasks in the list." + RESET);
@@ -178,6 +179,8 @@ public class Sioet {
             Task deletedTask = tasks.remove(taskIndexes[index]);
             deletedTasks.insert(0, deletedTask + "\n");
         }
+
+        Storage.save(tasks);
 
         String message;
         if (taskIndexes.length == 1) {
@@ -230,6 +233,8 @@ public class Sioet {
                 throw new SioetException("One or more task numbers are not in your list.");
             }
         }
+
+        Storage.save(tasks);
 
         StringBuilder markedTasks = new StringBuilder();
         for (int taskIndex : taskIndexes) {

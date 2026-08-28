@@ -27,4 +27,22 @@ public class Event extends Task {
     protected String getDetails() {
         return " (from: " + from + " to: " + to + ")";
     }
+
+    /**
+     * Returns the event's start date or time.
+     *
+     * @return the start date or time
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns the event's end date or time.
+     *
+     * @return the end date or time
+     */
+    public String getTo() {
+        return to;
+    }
 }
