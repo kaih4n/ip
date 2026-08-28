@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tests saving tasks to the hard disk.
+ * Tests saving and loading tasks to the hard disk.
  */
 public class StorageTest {
     private static final Path FILE_PATH = Path.of("data", "sioet.txt");
@@ -112,6 +113,100 @@ public class StorageTest {
                         + "D | 0 | return book | June 6th\n"
                         + "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm",
                 Files.readString(FILE_PATH).trim()
+        );
+    }
+
+    /**
+     * Tests that a todo task is loaded correctly.
+     */
+    @Test
+    public void loadTodo() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.writeString(FILE_PATH, "T | 0 | read book");
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] read book", tasks.get(0).toString());
+    }
+
+    /**
+     * Tests that a completed todo task is loaded with the correct status.
+     */
+    @Test
+    public void loadCompletedTodo() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.writeString(FILE_PATH, "T | 1 | read book");
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(1, tasks.size());
+        assertTrue(tasks.get(0).isDone());
+    }
+
+    /**
+     * Tests that a deadline task is loaded correctly.
+     */
+    @Test
+    public void loadDeadline() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.writeString(
+                FILE_PATH,
+                "D | 0 | return book | June 6th"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals(
+                "[D][ ] return book (by: June 6th)",
+                tasks.get(0).toString()
+        );
+    }
+
+    /**
+     * Tests that an event task is loaded correctly.
+     */
+    @Test
+    public void loadEvent() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.writeString(
+                FILE_PATH,
+                "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals(
+                "[E][ ] project meeting (from: Aug 6th 2pm to: Aug 6th 4pm)",
+                tasks.get(0).toString()
+        );
+    }
+
+    /**
+     * Tests that multiple tasks are loaded in the correct order
+     * with their completion statuses preserved.
+     */
+    @Test
+    public void loadMultipleTasks() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+
+        Files.writeString(
+                FILE_PATH,
+                "T | 1 | read book\n"
+                        + "D | 0 | return book | June 6th\n"
+                        + "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(3, tasks.size());
+        assertTrue(tasks.get(0).isDone());
+        assertEquals("[D][ ] return book (by: June 6th)", tasks.get(1).toString());
+        assertEquals(
+                "[E][ ] project meeting (from: Aug 6th 2pm to: Aug 6th 4pm)",
+                tasks.get(2).toString()
         );
     }
 }
