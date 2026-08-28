@@ -2,6 +2,10 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  * Starts the Sioet chatbot application.
  */
@@ -10,6 +14,8 @@ public class Sioet {
     private static final String GREEN = "\u001B[32m";
     private static final String RESET = "\u001B[0m";
     private static final ArrayList<Task> tasks = Storage.load();
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
      * Displays the Sioet welcome banner.
@@ -103,8 +109,17 @@ public class Sioet {
             throw new SioetException("use: deadline DESCRIPTION /by DATE. Example: deadline final project /by 01/02/34");
         }
         String description = taskText.substring(0, byMarkerIndex).trim();
-        String by = taskText.substring(byMarkerIndex + " /by ".length()).trim();
-        addTask(new Deadline(description, by));
+        String byText = taskText.substring(
+                byMarkerIndex + " /by ".length()).trim();
+
+        try {
+            LocalDateTime by = LocalDateTime.parse(byText, DATE_TIME_FORMATTER);
+            addTask(new Deadline(description, by));
+        } catch (DateTimeParseException exception) {
+            throw new SioetException(
+                    "Please use the date format d/M/yyyy HHmm. "
+                            + "Example: 2/12/2019 1800");
+        }
     }
 
     /**
@@ -116,14 +131,31 @@ public class Sioet {
     private static void addEvent(String taskText) throws SioetException {
         int fromMarkerIndex = taskText.indexOf(" /from ");
         int toMarkerIndex = taskText.indexOf(" /to ");
-        if (fromMarkerIndex < 1 || toMarkerIndex <= fromMarkerIndex + " /from ".length()
+
+        if (fromMarkerIndex < 1
+                || toMarkerIndex <= fromMarkerIndex + " /from ".length()
                 || toMarkerIndex + " /to ".length() >= taskText.length()) {
-            throw new SioetException("use: event DESCRIPTION /from START /to END. Example: event birthday party /from 7pm /to 11pm");
+            throw new SioetException(
+                    "use: event DESCRIPTION /from START /to END. "
+                            + "Example: event birthday party /from 7/9/2026 1900 /to 7/9/2026 2300");
         }
+
         String description = taskText.substring(0, fromMarkerIndex).trim();
-        String from = taskText.substring(fromMarkerIndex + " /from ".length(), toMarkerIndex).trim();
-        String to = taskText.substring(toMarkerIndex + " /to ".length()).trim();
-        addTask(new Event(description, from, to));
+        String fromText = taskText.substring(
+                fromMarkerIndex + " /from ".length(), toMarkerIndex).trim();
+        String toText = taskText.substring(
+                toMarkerIndex + " /to ".length()).trim();
+
+        try {
+            LocalDateTime from = LocalDateTime.parse(fromText, DATE_TIME_FORMATTER);
+            LocalDateTime to = LocalDateTime.parse(toText, DATE_TIME_FORMATTER);
+
+            addTask(new Event(description, from, to));
+        } catch (DateTimeParseException exception) {
+            throw new SioetException(
+                    "Please use the date format d/M/yyyy HHmm. "
+                            + "Example: event birthday party /from 7/9/2026 1900 /to 7/9/2026 2300");
+        }
     }
 
     /**

@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class StorageTest {
     private static final Path FILE_PATH = Path.of("data", "sioet.txt");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
      * Removes the saved file after each test.
@@ -66,12 +71,14 @@ public class StorageTest {
     @Test
     public void saveDeadline() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Deadline("return book", "June 6th"));
-
+        tasks.add(new Deadline(
+                "return book",
+                LocalDateTime.of(2026, 6, 6, 23, 59)
+        ));
         Storage.save(tasks);
 
         assertEquals(
-                "D | 0 | return book | June 6th",
+                "D | 0 | return book | 6/6/2026 2359",
                 Files.readString(FILE_PATH).trim()
         );
     }
@@ -82,12 +89,16 @@ public class StorageTest {
     @Test
     public void saveEvent() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Event("project meeting", "Aug 6th 2pm", "Aug 6th 4pm"));
+        tasks.add(new Event(
+                "project meeting",
+                LocalDateTime.of(2026, 8, 6, 14, 0),
+                LocalDateTime.of(2026, 8, 6, 16, 0)
+        ));
 
         Storage.save(tasks);
 
         assertEquals(
-                "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm",
+                "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600",
                 Files.readString(FILE_PATH).trim()
         );
     }
@@ -103,15 +114,22 @@ public class StorageTest {
         todo.markAsDone();
 
         tasks.add(todo);
-        tasks.add(new Deadline("return book", "June 6th"));
-        tasks.add(new Event("project meeting", "Aug 6th 2pm", "Aug 6th 4pm"));
+        tasks.add(new Deadline(
+                "return book",
+                LocalDateTime.of(2026, 6, 6, 23, 59)
+        ));
+        tasks.add(new Event(
+                "project meeting",
+                LocalDateTime.of(2026, 8, 6, 14, 0),
+                LocalDateTime.of(2026, 8, 6, 16, 0)
+        ));
 
         Storage.save(tasks);
 
         assertEquals(
                 "T | 1 | read book\n"
-                        + "D | 0 | return book | June 6th\n"
-                        + "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm",
+                        + "D | 0 | return book | 6/6/2026 2359\n"
+                        + "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600",
                 Files.readString(FILE_PATH).trim()
         );
     }
@@ -152,14 +170,14 @@ public class StorageTest {
         Files.createDirectories(FILE_PATH.getParent());
         Files.writeString(
                 FILE_PATH,
-                "D | 0 | return book | June 6th"
+                "D | 0 | return book | 6/6/2026 2359"
         );
 
         ArrayList<Task> tasks = Storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals(
-                "[D][ ] return book (by: June 6th)",
+                "[D][ ] return book (by: Jun 06 2026, 11:59 PM)",
                 tasks.get(0).toString()
         );
     }
@@ -172,14 +190,14 @@ public class StorageTest {
         Files.createDirectories(FILE_PATH.getParent());
         Files.writeString(
                 FILE_PATH,
-                "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm"
+                "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600"
         );
 
         ArrayList<Task> tasks = Storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals(
-                "[E][ ] project meeting (from: Aug 6th 2pm to: Aug 6th 4pm)",
+                "[E][ ] project meeting (from: Aug 06 2026, 2:00 PM to: Aug 06 2026, 4:00 PM)",
                 tasks.get(0).toString()
         );
     }
@@ -195,17 +213,20 @@ public class StorageTest {
         Files.writeString(
                 FILE_PATH,
                 "T | 1 | read book\n"
-                        + "D | 0 | return book | June 6th\n"
-                        + "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm"
+                        + "D | 0 | return book | 6/6/2026 2359\n"
+                        + "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600"
         );
 
         ArrayList<Task> tasks = Storage.load();
 
         assertEquals(3, tasks.size());
         assertTrue(tasks.get(0).isDone());
-        assertEquals("[D][ ] return book (by: June 6th)", tasks.get(1).toString());
         assertEquals(
-                "[E][ ] project meeting (from: Aug 6th 2pm to: Aug 6th 4pm)",
+                "[D][ ] return book (by: Jun 06 2026, 11:59 PM)",
+                tasks.get(1).toString()
+        );
+        assertEquals(
+                "[E][ ] project meeting (from: Aug 06 2026, 2:00 PM to: Aug 06 2026, 4:00 PM)",
                 tasks.get(2).toString()
         );
     }
@@ -253,7 +274,7 @@ public class StorageTest {
                 FILE_PATH,
                 "T | 0 | read book\n"
                         + "THIS IS CORRUPTED\n"
-                        + "D | 0 | return book | June 6th"
+                        + "D | 0 | return book | 6/6/2026 2359"
         );
 
         ArrayList<Task> tasks = Storage.load();
@@ -261,7 +282,7 @@ public class StorageTest {
         assertEquals(2, tasks.size());
         assertEquals("[T][ ] read book", tasks.get(0).toString());
         assertEquals(
-                "[D][ ] return book (by: June 6th)",
+                "[D][ ] return book (by: Jun 06 2026, 11:59 PM)",
                 tasks.get(1).toString()
         );
     }
@@ -277,12 +298,17 @@ public class StorageTest {
                 FILE_PATH,
                 "T | 0 | read book\n"
                         + "X | 0 | invalid task\n"
-                        + "D | 0 | return book | June 6th"
+                        + "D | 0 | return book | 6/6/2026 2359"
         );
 
         ArrayList<Task> tasks = Storage.load();
 
         assertEquals(2, tasks.size());
+        assertEquals("[T][ ] read book", tasks.get(0).toString());
+        assertEquals(
+                "[D][ ] return book (by: Jun 06 2026, 11:59 PM)",
+                tasks.get(1).toString()
+        );
     }
 
     /**

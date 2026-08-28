@@ -1,15 +1,21 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Handles saving tasks to the hard disk.
  */
 public class Storage {
     private static final Path FILE_PATH = Path.of("data", "sioet.txt");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
      * Saves all tasks to the data file.
@@ -29,12 +35,12 @@ public class Storage {
                 } else if (task instanceof Deadline deadline) {
                     lines.add("D | " + (task.isDone() ? "1" : "0")
                             + " | " + task.getDescription()
-                            + " | " + deadline.getBy());
+                            + " | " + deadline.getBy().format(DATE_TIME_FORMATTER));
                 } else if (task instanceof Event event) {
                     lines.add("E | " + (task.isDone() ? "1" : "0")
                             + " | " + task.getDescription()
-                            + " | " + event.getFrom()
-                            + " | " + event.getTo());
+                            + " | " + event.getFrom().format(DATE_TIME_FORMATTER)
+                            + " | " + event.getTo().format(DATE_TIME_FORMATTER));
                 }
             }
 
@@ -76,9 +82,16 @@ public class Storage {
                     if (type.equals("T") && parts.length == 3) {
                         task = new Todo(description);
                     } else if (type.equals("D") && parts.length == 4) {
-                        task = new Deadline(description, parts[3]);
+                        task = new Deadline(
+                                description,
+                                LocalDateTime.parse(parts[3], DATE_TIME_FORMATTER)
+                        );
                     } else if (type.equals("E") && parts.length == 5) {
-                        task = new Event(description, parts[3], parts[4]);
+                        task = new Event(
+                                description,
+                                LocalDateTime.parse(parts[3], DATE_TIME_FORMATTER),
+                                LocalDateTime.parse(parts[4], DATE_TIME_FORMATTER)
+                        );
                     } else {
                         continue;
                     }

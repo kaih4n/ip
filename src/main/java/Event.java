@@ -1,18 +1,22 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 /**
  * Represents a task that occurs during a specified time interval.
  */
 public class Event extends Task {
-    private final String from;
-    private final String to;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     /**
      * Creates an event task with its description, start time, and end time.
      *
      * @param description the event description
-     * @param from the start date or time
-     * @param to the end date or time
+     * @param from the start date and time
+     * @param to the end date and time
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -25,24 +29,28 @@ public class Event extends Task {
 
     @Override
     protected String getDetails() {
-        return " (from: " + from + " to: " + to + ")";
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a", Locale.ENGLISH);
+
+        return " (from: " + from.format(formatter)
+                + " to: " + to.format(formatter) + ")";
     }
 
     /**
-     * Returns the event's start date or time.
+     * Returns the event's start date and time.
      *
-     * @return the start date or time
+     * @return the start date and time
      */
-    public String getFrom() {
+    public LocalDateTime getFrom() {
         return from;
     }
 
     /**
-     * Returns the event's end date or time.
+     * Returns the event's end date and time.
      *
-     * @return the end date or time
+     * @return the end date and time
      */
-    public String getTo() {
+    public LocalDateTime getTo() {
         return to;
     }
 }
