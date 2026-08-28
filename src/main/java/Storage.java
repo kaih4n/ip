@@ -59,32 +59,44 @@ public class Storage {
         try (Scanner scanner = new Scanner(FILE_PATH)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] parts = line.split(" \\| ");
 
-                String type = parts[0];
-                boolean isDone = parts[1].equals("1");
-                String description = parts[2];
-
-                Task task;
-
-                if (type.equals("T")) {
-                    task = new Todo(description);
-                } else if (type.equals("D")) {
-                    task = new Deadline(description, parts[3]);
-                } else {
-                    task = new Event(description, parts[3], parts[4]);
+                if (line.isBlank()) {
+                    continue;
                 }
 
-                if (isDone) {
-                    task.markAsDone();
-                }
+                String[] parts = line.split(" \\| ", -1);
 
-                tasks.add(task);
+                try {
+                    String type = parts[0];
+                    boolean isDone = parts[1].equals("1");
+                    String description = parts[2];
+
+                    Task task;
+
+                    if (type.equals("T") && parts.length == 3) {
+                        task = new Todo(description);
+                    } else if (type.equals("D") && parts.length == 4) {
+                        task = new Deadline(description, parts[3]);
+                    } else if (type.equals("E") && parts.length == 5) {
+                        task = new Event(description, parts[3], parts[4]);
+                    } else {
+                        continue;
+                    }
+
+                    if (isDone) {
+                        task.markAsDone();
+                    }
+
+                    tasks.add(task);
+                } catch (RuntimeException exception) {
+                    // Skip corrupted task entries.
+                }
             }
         } catch (IOException exception) {
-            throw new RuntimeException("Could not load tasks.", exception);
+            System.out.println("Warning: Could not load saved tasks.");
         }
 
         return tasks;
     }
+
 }

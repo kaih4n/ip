@@ -209,4 +209,100 @@ public class StorageTest {
                 tasks.get(2).toString()
         );
     }
+
+    /**
+     * Tests that an empty task list is returned when the data file does not exist.
+     */
+    @Test
+    public void loadMissingFile() throws IOException {
+        Files.deleteIfExists(FILE_PATH);
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertTrue(tasks.isEmpty());
+    }
+
+    /**
+     * Tests that blank lines in the data file are ignored.
+     */
+    @Test
+    public void loadIgnoresBlankLines() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+
+        Files.writeString(
+                FILE_PATH,
+                "\n"
+                        + "T | 0 | read book\n"
+                        + "\n"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] read book", tasks.get(0).toString());
+    }
+
+    /**
+     * Tests that corrupted task entries are skipped while valid tasks are loaded.
+     */
+    @Test
+    public void loadSkipsCorruptedTask() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+
+        Files.writeString(
+                FILE_PATH,
+                "T | 0 | read book\n"
+                        + "THIS IS CORRUPTED\n"
+                        + "D | 0 | return book | June 6th"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(2, tasks.size());
+        assertEquals("[T][ ] read book", tasks.get(0).toString());
+        assertEquals(
+                "[D][ ] return book (by: June 6th)",
+                tasks.get(1).toString()
+        );
+    }
+
+    /**
+     * Tests that an unknown task type is skipped.
+     */
+    @Test
+    public void loadSkipsUnknownTaskType() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+
+        Files.writeString(
+                FILE_PATH,
+                "T | 0 | read book\n"
+                        + "X | 0 | invalid task\n"
+                        + "D | 0 | return book | June 6th"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(2, tasks.size());
+    }
+
+    /**
+     * Tests that task entries with missing or extra fields are skipped.
+     */
+    @Test
+    public void loadSkipsIncorrectFormat() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+
+        Files.writeString(
+                FILE_PATH,
+                "T | 0\n"
+                        + "D | 0 | return book\n"
+                        + "E | 0 | meeting | 2pm\n"
+                        + "T | 0 | valid task"
+        );
+
+        ArrayList<Task> tasks = Storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] valid task", tasks.get(0).toString());
+    }
 }
