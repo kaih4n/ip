@@ -1,14 +1,9 @@
-import java.util.Arrays;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 public class Sioet {
     private static final TaskList tasks = Storage.load();
     private static final Ui ui = new Ui();
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
      * Starts the Sioet chatbot application.
@@ -45,22 +40,23 @@ public class Sioet {
      * @throws SioetException if the command is unknown or contains invalid details
      */
     private static void handleCommand(String command) throws SioetException {
-        if (command.equals("list")) {
+        String commandType = Parser.parseCommand(command);
+        String arguments = Parser.getArguments(command);
+
+        if (commandType.equals("list")) {
             printTasks();
-        } else if (command.equals("mark") || command.startsWith("mark ")) {
-            markTasks(command.substring("mark".length()).trim(), true);
-        } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-            markTasks(command.substring("unmark".length()).trim(), false);
-        } else if (command.equals("todo") || command.startsWith("todo ")) {
-            addTodo(command.substring("todo".length()).trim());
-        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-            addDeadline(command.substring("deadline".length()).trim());
-        } else if (command.equals("event") || command.startsWith("event ")) {
-            addEvent(command.substring("event".length()).trim());
-        } else if (command.equals("delete") || command.startsWith("delete ")) {
-            deleteTask(command.substring("delete".length()).trim());
-        } else {
-            throw new SioetException("I don't recognise that command. Try list, todo, deadline, event, mark, or unmark.");
+        } else if (commandType.equals("mark")) {
+            markTasks(arguments, true);
+        } else if (commandType.equals("unmark")) {
+            markTasks(arguments, false);
+        } else if (commandType.equals("todo")) {
+            addTodo(arguments);
+        } else if (commandType.equals("deadline")) {
+            addDeadline(arguments);
+        } else if (commandType.equals("event")) {
+            addEvent(arguments);
+        } else if (commandType.equals("delete")) {
+            deleteTask(arguments);
         }
     }
 
@@ -84,20 +80,14 @@ public class Sioet {
     private static void addDeadline(String taskText) throws SioetException {
         int byMarkerIndex = taskText.indexOf(" /by ");
         if (byMarkerIndex < 1 || byMarkerIndex + " /by ".length() >= taskText.length()) {
-            throw new SioetException("use: deadline DESCRIPTION /by DATE. Example: deadline final project /by 1/2/2034");
+            throw new SioetException("use: deadline DESCRIPTION /by DATE. Example: deadline final project /by 1/2/2034 0000");
         }
         String description = taskText.substring(0, byMarkerIndex).trim();
         String byText = taskText.substring(
                 byMarkerIndex + " /by ".length()).trim();
 
-        try {
-            LocalDateTime by = LocalDateTime.parse(byText, DATE_TIME_FORMATTER);
-            addTask(new Deadline(description, by));
-        } catch (DateTimeParseException exception) {
-            throw new SioetException(
-                    "Please use the date format d/M/yyyy HHmm. "
-                            + "Example: 2/12/2019 1800");
-        }
+        LocalDateTime by = Parser.parseDateTime(byText);
+        addTask(new Deadline(description, by));
     }
 
     /**
@@ -124,16 +114,10 @@ public class Sioet {
         String toText = taskText.substring(
                 toMarkerIndex + " /to ".length()).trim();
 
-        try {
-            LocalDateTime from = LocalDateTime.parse(fromText, DATE_TIME_FORMATTER);
-            LocalDateTime to = LocalDateTime.parse(toText, DATE_TIME_FORMATTER);
+        LocalDateTime from = Parser.parseDateTime(fromText);
+        LocalDateTime to = Parser.parseDateTime(toText);
 
-            addTask(new Event(description, from, to));
-        } catch (DateTimeParseException exception) {
-            throw new SioetException(
-                    "Please use the date format d/M/yyyy HHmm. "
-                            + "Example: event birthday party /from 7/9/2026 1900 /to 7/9/2026 2300");
-        }
+        addTask(new Event(description, from, to));
     }
 
     /**
@@ -226,8 +210,6 @@ public class Sioet {
             }
         }
 
-        Storage.save(tasks);
-
         StringBuilder markedTasks = new StringBuilder();
         for (int taskIndex : taskIndexes) {
             Task task = tasks.get(taskIndex);
@@ -238,6 +220,8 @@ public class Sioet {
             }
             markedTasks.append(task).append('\n');
         }
+
+        Storage.save(tasks);
 
         ui.showTasksMarked(
                 markedTasks.toString(),
