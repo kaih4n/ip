@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Tests saving and loading tasks to the hard disk.
  */
 public class StorageTest {
+    private final Storage storage = new Storage();
     private static final Path FILE_PATH = Path.of("data", "sioet.txt");
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
@@ -34,10 +34,10 @@ public class StorageTest {
      */
     @Test
     public void saveTodo() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskList tasks = new TaskList();
         tasks.add(new Todo("read book"));
 
-        Storage.save(tasks);
+        storage.save(tasks);
 
         assertTrue(Files.exists(FILE_PATH));
         assertEquals(
@@ -51,13 +51,13 @@ public class StorageTest {
      */
     @Test
     public void saveCompletedTodo() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskList tasks = new TaskList();
 
         Todo todo = new Todo("read book");
         todo.markAsDone();
         tasks.add(todo);
 
-        Storage.save(tasks);
+        storage.save(tasks);
 
         assertEquals(
                 "T | 1 | read book",
@@ -70,12 +70,12 @@ public class StorageTest {
      */
     @Test
     public void saveDeadline() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskList tasks = new TaskList();
         tasks.add(new Deadline(
                 "return book",
                 LocalDateTime.of(2026, 6, 6, 23, 59)
         ));
-        Storage.save(tasks);
+        storage.save(tasks);
 
         assertEquals(
                 "D | 0 | return book | 6/6/2026 2359",
@@ -88,14 +88,14 @@ public class StorageTest {
      */
     @Test
     public void saveEvent() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskList tasks = new TaskList();
         tasks.add(new Event(
                 "project meeting",
                 LocalDateTime.of(2026, 8, 6, 14, 0),
                 LocalDateTime.of(2026, 8, 6, 16, 0)
         ));
 
-        Storage.save(tasks);
+        storage.save(tasks);
 
         assertEquals(
                 "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600",
@@ -108,7 +108,7 @@ public class StorageTest {
      */
     @Test
     public void saveMultipleTasks() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskList tasks = new TaskList();
 
         Todo todo = new Todo("read book");
         todo.markAsDone();
@@ -124,7 +124,7 @@ public class StorageTest {
                 LocalDateTime.of(2026, 8, 6, 16, 0)
         ));
 
-        Storage.save(tasks);
+        storage.save(tasks);
 
         assertEquals(
                 "T | 1 | read book\n"
@@ -142,7 +142,7 @@ public class StorageTest {
         Files.createDirectories(FILE_PATH.getParent());
         Files.writeString(FILE_PATH, "T | 0 | read book");
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] read book", tasks.get(0).toString());
@@ -156,7 +156,7 @@ public class StorageTest {
         Files.createDirectories(FILE_PATH.getParent());
         Files.writeString(FILE_PATH, "T | 1 | read book");
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(1, tasks.size());
         assertTrue(tasks.get(0).isDone());
@@ -173,7 +173,7 @@ public class StorageTest {
                 "D | 0 | return book | 6/6/2026 2359"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals(
@@ -193,7 +193,7 @@ public class StorageTest {
                 "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals(
@@ -217,7 +217,7 @@ public class StorageTest {
                         + "E | 0 | project meeting | 6/8/2026 1400 | 6/8/2026 1600"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(3, tasks.size());
         assertTrue(tasks.get(0).isDone());
@@ -238,10 +238,9 @@ public class StorageTest {
     public void loadMissingFile() throws IOException {
         Files.deleteIfExists(FILE_PATH);
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
-        assertTrue(tasks.isEmpty());
-    }
+        assertEquals(0, tasks.size());    }
 
     /**
      * Tests that blank lines in the data file are ignored.
@@ -257,7 +256,7 @@ public class StorageTest {
                         + "\n"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] read book", tasks.get(0).toString());
@@ -277,7 +276,7 @@ public class StorageTest {
                         + "D | 0 | return book | 6/6/2026 2359"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(2, tasks.size());
         assertEquals("[T][ ] read book", tasks.get(0).toString());
@@ -301,7 +300,7 @@ public class StorageTest {
                         + "D | 0 | return book | 6/6/2026 2359"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(2, tasks.size());
         assertEquals("[T][ ] read book", tasks.get(0).toString());
@@ -326,7 +325,7 @@ public class StorageTest {
                         + "T | 0 | valid task"
         );
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = storage.load();
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] valid task", tasks.get(0).toString());

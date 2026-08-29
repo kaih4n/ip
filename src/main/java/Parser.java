@@ -10,13 +10,50 @@ public class Parser {
             DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
-     * Parses the command entered by the user.
+     * Converts a user command into a command object.
      *
-     * @param command the command entered by the user
-     * @return the parsed command
+     * @param command the complete command entered by the user
+     * @return the command represented by the input
      * @throws SioetException if the command is not recognised
      */
-    public static String parseCommand(String command) throws SioetException {
+    public static Command parse(String command) throws SioetException {
+        if (command.equals("bye")) {
+            return new ExitCommand();
+        }
+
+        String commandType = parseCommand(command);
+        String arguments = getArguments(command);
+
+        switch (commandType) {
+            case "list":
+                return new ListCommand();
+            case "mark":
+                return new MarkCommand(arguments, true);
+            case "unmark":
+                return new MarkCommand(arguments, false);
+            case "todo":
+                return new TodoCommand(arguments);
+            case "deadline":
+                return new DeadlineCommand(arguments);
+            case "event":
+                return new EventCommand(arguments);
+            case "delete":
+                return new DeleteCommand(arguments);
+            default:
+                throw new SioetException(
+                        "I don't recognise that command. Try list, todo, deadline, "
+                                + "event, mark, or unmark.");
+        }
+    }
+
+    /**
+     * Identifies the type of a user command.
+     *
+     * @param command the command entered by the user
+     * @return the command type
+     * @throws SioetException if the command is not recognised
+     */
+    private static String parseCommand(String command) throws SioetException {
         if (command.equals("list")) {
             return "list";
         } else if (command.equals("mark") || command.startsWith("mark ")) {
@@ -34,8 +71,7 @@ public class Parser {
         } else {
             throw new SioetException(
                     "I don't recognise that command. Try list, todo, deadline, "
-                            + "event, mark, or unmark."
-            );
+                            + "event, mark, or unmark.");
         }
     }
 
@@ -45,7 +81,7 @@ public class Parser {
      * @param command the complete command
      * @return the text after the command word
      */
-    public static String getArguments(String command) {
+    private static String getArguments(String command) {
         int spaceIndex = command.indexOf(" ");
 
         if (spaceIndex == -1) {
