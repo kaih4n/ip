@@ -106,7 +106,7 @@ public class Sioet {
     private static void addDeadline(String taskText) throws SioetException {
         int byMarkerIndex = taskText.indexOf(" /by ");
         if (byMarkerIndex < 1 || byMarkerIndex + " /by ".length() >= taskText.length()) {
-            throw new SioetException("use: deadline DESCRIPTION /by DATE. Example: deadline final project /by 01/02/34");
+            throw new SioetException("use: deadline DESCRIPTION /by DATE. Example: deadline final project /by 1/2/2034");
         }
         String description = taskText.substring(0, byMarkerIndex).trim();
         String byText = taskText.substring(
