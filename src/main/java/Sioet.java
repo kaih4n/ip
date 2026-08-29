@@ -1,4 +1,3 @@
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,52 +9,35 @@ import java.time.format.DateTimeParseException;
  * Starts the Sioet chatbot application.
  */
 public class Sioet {
-    private static final String BLUE = "\u001B[34m";
-    private static final String GREEN = "\u001B[32m";
-    private static final String RESET = "\u001B[0m";
     private static final ArrayList<Task> tasks = Storage.load();
+    private static final Ui ui = new Ui();
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
-     * Displays the Sioet welcome banner.
+     * Starts the Sioet chatbot application.
      *
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        String horizontalBorder = "═".repeat(30);
-        String banner = "╔" + horizontalBorder + "╗\n"
-                + "║%-30s║%n".formatted("      ✦       ･        ✧")
-                + bannerLine("   :    ", "╔═╗╦╔═╗╔═╗╔╦╗", "    *")
-                + bannerLine("  ﾟ     ", "╚═╗║║ ║║╣  ║", "      ✦")
-                + bannerLine("     ✧  ", "╚═╝╩╚═╝╚═╝ ╩", "   ･")
-                + "║%-30s║%n".formatted("   *        :       ﾟ     ✧")
-                + "╚" + horizontalBorder + "╝\n";
-        System.out.println(banner
-                           + BLUE + "Hello! I'm Sioet.\n"
-                           + "What can I do for you?" + RESET
-        );
+        ui.showWelcome();
 
-        Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print(GREEN + "You: " + RESET);
-            System.out.flush();
+            String command = ui.readCommand();
 
-            if (!scanner.hasNextLine()) {
+            if (command == null) {
                 break;
             }
 
-            String command = scanner.nextLine();
-
             if (command.equals("bye")) {
-                System.out.println(BLUE + "Bye! Hope to see you again soon!" + RESET);
+                ui.showBye();
                 break;
             }
 
             try {
                 handleCommand(command);
             } catch (SioetException exception) {
-                System.out.println(BLUE + "I couldn't do that: " + exception.getMessage() + RESET);
+                ui.showError(exception.getMessage());
             }
         }
     }
@@ -167,8 +149,7 @@ public class Sioet {
         tasks.add(task);
         Storage.save(tasks);
 
-        System.out.println(BLUE + "Got it. I've added this task:\n  " + task
-                + "\nNow you have " + tasks.size() + " tasks in the list." + RESET);
+        ui.showTaskAdded(task, tasks.size());
     }
 
     /**
@@ -214,20 +195,7 @@ public class Sioet {
 
         Storage.save(tasks);
 
-        String message;
-        if (taskIndexes.length == 1) {
-            message = "Noted. I've removed this task:\n\n";
-        } else {
-            message = "Noted. I've removed these tasks:\n\n";
-        }
-
-        System.out.println(BLUE
-                + message
-                + deletedTasks.toString().trim()
-                + "\nNow you have "
-                + tasks.size()
-                + " tasks in the list."
-                + RESET);
+        ui.showTasksDeleted(deletedTasks.toString(), taskIndexes.length, tasks.size());
     }
 
 
@@ -235,10 +203,7 @@ public class Sioet {
      * Displays every stored task in the order it was entered.
      */
     private static void printTasks() {
-        System.out.println(BLUE + "Here are the tasks in your list:" + RESET);
-        for (int index = 0; index < tasks.size(); index++) {
-            System.out.println(BLUE + (index + 1) + "." + tasks.get(index) + RESET);
-        }
+        ui.showTasks(tasks);
     }
 
     /**
@@ -279,30 +244,10 @@ public class Sioet {
             markedTasks.append(task).append('\n');
         }
 
-        String message;
-        if (taskIndexes.length == 1) {
-            message = shouldMarkDone
-                    ? "Nice! I've marked this task as done:\n\n"
-                    : "OK, I've marked this task as not done yet:\n\n";
-        } else {
-            message = shouldMarkDone
-                    ? "Nice! I've marked these tasks as done:\n\n"
-                    : "OK, I've marked these tasks as not done yet:\n\n";
-        }
-        System.out.println(BLUE + message + markedTasks.toString().trim() + RESET);
-    }
-
-    /**
-     * Creates a banner row with the SIOET lettering shown in blue.
-     *
-     * @param prefix decoration before the lettering
-     * @param lettering one row of the SIOET logo
-     * @param suffix decoration after the lettering
-     * @return a correctly aligned banner row
-     */
-    private static String bannerLine(String prefix, String lettering, String suffix) {
-        String content = prefix + lettering + suffix;
-        return "║" + prefix + BLUE + lettering + RESET + suffix
-                + " ".repeat(30 - content.length()) + "║\n";
+        ui.showTasksMarked(
+                markedTasks.toString(),
+                taskIndexes.length,
+                shouldMarkDone
+        );
     }
 }
