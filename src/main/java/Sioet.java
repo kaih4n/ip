@@ -1,15 +1,11 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-/**
- * Starts the Sioet chatbot application.
- */
 public class Sioet {
-    private static final ArrayList<Task> tasks = Storage.load();
+    private static final TaskList tasks = Storage.load();
     private static final Ui ui = new Ui();
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
@@ -194,7 +190,6 @@ public class Sioet {
         }
 
         Storage.save(tasks);
-
         ui.showTasksDeleted(deletedTasks.toString(), taskIndexes.length, tasks.size());
     }
 

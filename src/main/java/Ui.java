@@ -1,9 +1,8 @@
+import java.util.Scanner;
+
 /**
  * Handles interactions between Sioet and the user through the console.
  */
-import java.util.Scanner;
-import java.util.ArrayList;
-
 public class Ui {
     private static final String BLUE = "\u001B[34m";
     private static final String GREEN = "\u001B[32m";
@@ -120,7 +119,7 @@ public class Ui {
      *
      * @param tasks the tasks to display
      */
-    public void showTasks(ArrayList<Task> tasks) {
+    public void showTasks(TaskList tasks) {
         System.out.println(BLUE + "Here are the tasks in your list:" + RESET);
         for (int index = 0; index < tasks.size(); index++) {
             System.out.println(BLUE + (index + 1) + "." + tasks.get(index) + RESET);

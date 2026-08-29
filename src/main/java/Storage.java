@@ -22,7 +22,7 @@ public class Storage {
      *
      * @param tasks the tasks to save
      */
-    public static void save(ArrayList<Task> tasks) {
+    public static void save(TaskList tasks) {
         try {
             Files.createDirectories(FILE_PATH.getParent());
 
@@ -55,8 +55,8 @@ public class Storage {
      *
      * @return the tasks stored in the data file
      */
-    public static ArrayList<Task> load() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public static TaskList load() {
+        TaskList tasks = new TaskList();
 
         if (!Files.exists(FILE_PATH)) {
             return tasks;
