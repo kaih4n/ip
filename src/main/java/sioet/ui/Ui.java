@@ -1,7 +1,12 @@
+package sioet.ui;
+
+import sioet.task.Task;
+import sioet.task.TaskList;
+
 import java.util.Scanner;
 
 /**
- * Handles interactions between Sioet and the user through the console.
+ * Handles interactions between sioet.ui.Sioet and the user through the console.
  */
 public class Ui {
     private static final String BLUE = "\u001B[34m";
@@ -18,7 +23,7 @@ public class Ui {
     }
 
     /**
-     * Displays the Sioet welcome banner.
+     * Displays the sioet.ui.Sioet welcome banner.
      */
     public void showWelcome() {
         String horizontalBorder = "═".repeat(30);
@@ -31,7 +36,7 @@ public class Ui {
                 + "╚" + horizontalBorder + "╝\n";
 
         System.out.println(banner
-                + BLUE + "Hello! I'm Sioet.\n"
+                + BLUE + "Hello! I'm sioet.ui.Sioet.\n"
                 + "What can I do for you?" + RESET
         );
     }
@@ -67,7 +72,7 @@ public class Ui {
     }
 
     /**
-     * Displays Sioet's goodbye message.
+     * Displays sioet.ui.Sioet's goodbye message.
      */
     public void showBye() {
         System.out.println(BLUE + "Bye! Hope to see you again soon!" + RESET);

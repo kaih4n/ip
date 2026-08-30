@@ -1,9 +1,13 @@
+package sioet.command;
+
+import sioet.SioetException;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Parses user commands entered into Sioet.
+ * Parses user commands entered into sioet.ui.Sioet.
  */
 public class Parser {
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
@@ -92,7 +96,7 @@ public class Parser {
     }
 
     /**
-     * Parses a date and time from the Sioet date format.
+     * Parses a date and time from the sioet.ui.Sioet date format.
      *
      * @param text the date and time text
      * @return the parsed date and time

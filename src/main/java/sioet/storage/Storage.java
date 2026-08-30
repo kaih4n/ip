@@ -1,3 +1,11 @@
+package sioet.storage;
+
+import sioet.task.Deadline;
+import sioet.task.Event;
+import sioet.task.TaskList;
+import sioet.task.Task;
+import sioet.task.Todo;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

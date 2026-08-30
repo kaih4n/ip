@@ -1,4 +1,4 @@
-# Sioet User Guide
+# sioet.ui.Sioet User Guide
 
 // Product screenshot goes here
 

@@ -1,3 +1,5 @@
+package sioet.task;
+
 /**
  * Represents one task in the task list.
  * A task has a description and can be marked as completed or incomplete.
@@ -44,7 +46,7 @@ public abstract class Task {
      *
      * @return the task description
      */
-    protected String getDescription() {
+    public String getDescription() {
         return description;
     }
 

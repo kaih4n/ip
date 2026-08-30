@@ -1,5 +1,11 @@
+package sioet.command;
+
+import sioet.task.TaskList;
+import sioet.ui.Ui;
+import sioet.storage.Storage;
+
 /**
- * Represents the command that exits Sioet.
+ * Represents the command that exits sioet.ui.Sioet.
  */
 public class ExitCommand extends Command {
 
@@ -16,7 +22,7 @@ public class ExitCommand extends Command {
     }
 
     /**
-     * Returns whether this command should exit Sioet.
+     * Returns whether this command should exit sioet.ui.Sioet.
      *
      * @return true because this is the exit command
      */

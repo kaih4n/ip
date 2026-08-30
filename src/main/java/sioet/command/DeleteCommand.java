@@ -1,3 +1,11 @@
+package sioet.command;
+
+import sioet.task.TaskList;
+import sioet.ui.Ui;
+import sioet.storage.Storage;
+import sioet.SioetException;
+import sioet.task.Task;
+
 import java.util.Arrays;
 
 /**
@@ -40,7 +48,7 @@ public class DeleteCommand extends Command {
                         Integer.parseInt(taskNumberTexts[index].trim()) - 1;
             } catch (NumberFormatException exception) {
                 throw new SioetException(
-                        "Task numbers must be whole numbers separated by commas.");
+                        "sioet.task.Task numbers must be whole numbers separated by commas.");
             }
 
             if (taskIndexes[index] < 0

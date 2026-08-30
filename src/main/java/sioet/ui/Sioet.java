@@ -1,5 +1,10 @@
-import java.time.LocalDateTime;
-import java.util.Arrays;
+package sioet.ui;
+
+import sioet.command.Parser;
+import sioet.SioetException;
+import sioet.command.Command;
+import sioet.storage.Storage;
+import sioet.task.TaskList;
 
 public class Sioet {
     private static final Storage storage = new Storage();
@@ -7,7 +12,7 @@ public class Sioet {
     private static final Ui ui = new Ui();
 
     /**
-     * Starts the Sioet chatbot application.
+     * Starts the sioet.ui.Sioet chatbot application.
      *
      * @param args command-line arguments, which are not used
      */

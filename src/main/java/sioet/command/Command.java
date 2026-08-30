@@ -1,5 +1,12 @@
+package sioet.command;
+
+import sioet.task.TaskList;
+import sioet.ui.Ui;
+import sioet.storage.Storage;
+import sioet.SioetException;
+
 /**
- * Represents a command that can be executed by Sioet.
+ * Represents a command that can be executed by sioet.ui.Sioet.
  */
 public abstract class Command {
 
@@ -15,9 +22,9 @@ public abstract class Command {
             throws SioetException;
 
     /**
-     * Returns whether this command should exit Sioet.
+     * Returns whether this command should exit sioet.ui.Sioet.
      *
-     * @return true if Sioet should exit, false otherwise
+     * @return true if sioet.ui.Sioet should exit, false otherwise
      */
     public boolean isExit() {
         return false;

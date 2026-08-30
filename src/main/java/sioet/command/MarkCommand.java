@@ -1,3 +1,11 @@
+package sioet.command;
+
+import sioet.task.TaskList;
+import sioet.ui.Ui;
+import sioet.storage.Storage;
+import sioet.SioetException;
+import sioet.task.Task;
+
 /**
  * Represents the command that marks or unmarks tasks.
  */
@@ -41,7 +49,7 @@ public class MarkCommand extends Command {
                         Integer.parseInt(taskNumberTexts[index].trim()) - 1;
             } catch (NumberFormatException exception) {
                 throw new SioetException(
-                        "Task numbers must be whole numbers separated by commas.");
+                        "sioet.task.Task numbers must be whole numbers separated by commas.");
             }
 
             if (taskIndexes[index] < 0

@@ -1,5 +1,7 @@
+package sioet;
+
 /**
- * Represents an error caused by an invalid command entered into Sioet.
+ * Represents an error caused by an invalid command entered into sioet.ui.Sioet.
  */
 public class SioetException extends Exception {
     /**

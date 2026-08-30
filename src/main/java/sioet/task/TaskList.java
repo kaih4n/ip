@@ -1,8 +1,10 @@
+package sioet.task;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Represents the list of tasks managed by Sioet.
+ * Represents the list of tasks managed by sioet.ui.Sioet.
  */
 public class TaskList implements Iterable<Task> {
     private final ArrayList<Task> tasks;

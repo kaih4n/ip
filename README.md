@@ -1,4 +1,4 @@
-# Sioet project template
+# sioet.ui.Sioet project template
 
 This is a project template for a greenfield Java project. Given below are instructions on how to use it.
 
@@ -13,7 +13,7 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Sioet.java` file, right-click it, and choose `Run Sioet.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, the program will run without errors.
+1. After that, locate the `src/main/java/sioet.ui.Sioet.java` file, right-click it, and choose `Run sioet.ui.Sioet.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, the program will run without errors.
    ```
     ____        _        
    |  _ \ _   _| | _____ 
