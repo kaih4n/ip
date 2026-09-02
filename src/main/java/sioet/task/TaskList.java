@@ -2,6 +2,8 @@ package sioet.task;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents the list of tasks managed by sioet.ui.Sioet.
@@ -62,6 +64,25 @@ public class TaskList implements Iterable<Task> {
      */
     public Task remove(int index) {
         return tasks.remove(index);
+    }
+
+
+    /**
+     * Finds tasks whose descriptions contain the given keyword.
+     *
+     * @param keyword the keyword to search for
+     * @return a list of tasks whose descriptions contain the keyword
+     */
+    public List<Task> find(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
+            }
+        }
+
+        return matchingTasks;
     }
 
     /**

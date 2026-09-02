@@ -4,6 +4,7 @@ import sioet.task.Task;
 import sioet.task.TaskList;
 
 import java.util.Scanner;
+import java.util.List;
 
 /**
  * Handles interactions between sioet.ui.Sioet and the user through the console.
@@ -128,6 +129,24 @@ public class Ui {
         System.out.println(BLUE + "Here are the tasks in your list:" + RESET);
         for (int index = 0; index < tasks.size(); index++) {
             System.out.println(BLUE + (index + 1) + "." + tasks.get(index) + RESET);
+        }
+    }
+
+    /**
+     * Displays tasks matching a search keyword.
+     *
+     * @param matchingTasks the tasks matching the search
+     */
+    public void showMatchingTasks(List<Task> matchingTasks) {
+        if (matchingTasks.isEmpty()) {
+            System.out.println(BLUE + "No matching tasks found." + RESET);
+            return;
+        }
+
+        System.out.println(BLUE + "Here are the matching tasks in your list:" + RESET);
+
+        for (int index = 0; index < matchingTasks.size(); index++) {
+            System.out.println(BLUE + (index + 1) + "." + matchingTasks.get(index) + RESET);
         }
     }
 

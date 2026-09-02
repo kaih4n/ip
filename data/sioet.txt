@@ -1,0 +1,4 @@
+T | 0 | read chapter 5
+D | 0 | final project | 1/2/2034 0000
+E | 0 | birthday party | 7/9/2026 1900 | 7/9/2026 2300
+T | 0 | complete level 9

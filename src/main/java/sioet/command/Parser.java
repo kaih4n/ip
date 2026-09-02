@@ -43,6 +43,8 @@ public class Parser {
                 return new EventCommand(arguments);
             case "delete":
                 return new DeleteCommand(arguments);
+            case "find":
+                return new FindCommand(arguments);
             default:
                 throw new SioetException(
                         "I don't recognise that command. Try list, todo, deadline, "
@@ -72,10 +74,12 @@ public class Parser {
             return "event";
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             return "delete";
+        } else if (command.equals("find") || command.startsWith("find ")) {
+            return "find";
         } else {
             throw new SioetException(
                     "I don't recognise that command. Try list, todo, deadline, "
-                            + "event, mark, or unmark.");
+                            + "event, mark, unmark or find.");
         }
     }
 
