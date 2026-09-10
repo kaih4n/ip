@@ -12,7 +12,7 @@ import sioet.storage.Storage;
 import sioet.task.TaskList;
 
 /**
- * Represents the main sioet chatbot application.
+ * The main application class for Sioet.
  */
 public class Sioet extends Application {
 
