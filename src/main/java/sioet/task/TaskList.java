@@ -32,9 +32,9 @@ public class TaskList implements Iterable<Task> {
      * @param task the task to add
      */
     public void add(Task task) {
+        assert task != null : "Task should not be null";
         tasks.add(task);
     }
-
     /**
      * Gets a task at the specified index.
      *
