@@ -33,6 +33,10 @@ public class Ui {
         return lastResponse;
     }
 
+    private void showResponse() {
+        System.out.println(BLUE + lastResponse + RESET);
+    }
+
     public void showWelcome() {
         String horizontalBorder = "═".repeat(30);
         String banner = "╔" + horizontalBorder + "╗\n"
@@ -46,9 +50,8 @@ public class Ui {
         lastResponse = "Hello! I'm sioet.ui.Sioet.\n"
                 + "What can I do for you?";
 
-        System.out.println(banner
-                + BLUE + lastResponse + RESET
-        );
+        System.out.println(banner);
+        showResponse();
     }
 
     private String bannerLine(String prefix, String lettering, String suffix) {
@@ -70,19 +73,18 @@ public class Ui {
 
     public void showBye() {
         lastResponse = "Bye! Hope to see you again soon!";
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 
     public void showError(String message) {
         lastResponse = "I couldn't do that: " + message;
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 
     public void showTaskAdded(Task task, int taskCount) {
         lastResponse = "Got it. I've added this task:\n  " + task
                 + "\nNow you have " + taskCount + " tasks in the list.";
-
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 
     public void showTasksDeleted(String deletedTasks,
@@ -98,7 +100,7 @@ public class Ui {
                 + taskCount
                 + " tasks in the list.";
 
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 
     public void showTasks(TaskList tasks) {
@@ -114,7 +116,7 @@ public class Ui {
 
         lastResponse = response.toString().trim();
 
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 
     public void showMatchingTasks(List<Task> matchingTasks) {
@@ -136,7 +138,7 @@ public class Ui {
 
         lastResponse = response.toString().trim();
 
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 
     public void showTasksMarked(String markedTasks,
@@ -156,6 +158,6 @@ public class Ui {
 
         lastResponse = message + markedTasks.trim();
 
-        System.out.println(BLUE + lastResponse + RESET);
+        showResponse();
     }
 }
