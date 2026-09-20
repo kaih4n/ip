@@ -33,4 +33,14 @@ public class RecurringTaskTest {
 
         assertEquals("week", task.getRecurrence());
     }
+
+    @Test
+    public void toString_monthlyTask_showsCorrectFormat() {
+        RecurringTask task = new RecurringTask("pay bills", "month");
+
+        assertEquals(
+                "[R][ ] pay bills (every month)",
+                task.toString()
+        );
+    }
 }
