@@ -5,6 +5,7 @@ import sioet.task.Deadline;
 import sioet.task.Event;
 import sioet.task.TaskList;
 import sioet.task.Todo;
+import sioet.task.RecurringTask;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -108,6 +109,22 @@ public class StorageTest {
     }
 
     /**
+     * Tests that a recurring task is saved correctly.
+     */
+    @Test
+    public void saveRecurringTask() throws IOException {
+        TaskList tasks = new TaskList();
+        tasks.add(new RecurringTask("project meeting", "week"));
+
+        storage.save(tasks);
+
+        assertEquals(
+                "R | 0 | project meeting | week",
+                Files.readString(FILE_PATH).trim()
+        );
+    }
+
+    /**
      * Tests that multiple tasks are saved in the correct order.
      */
     @Test
@@ -202,6 +219,27 @@ public class StorageTest {
         assertEquals(1, tasks.size());
         assertEquals(
                 "[E][ ] project meeting (from: Aug 06 2026, 2:00 PM to: Aug 06 2026, 4:00 PM)",
+                tasks.get(0).toString()
+        );
+    }
+
+    /**
+     * Tests that a recurring task is loaded correctly.
+     */
+    @Test
+    public void loadRecurringTask() throws IOException {
+        Files.createDirectories(FILE_PATH.getParent());
+
+        Files.writeString(
+                FILE_PATH,
+                "R | 0 | project meeting | week"
+        );
+
+        TaskList tasks = storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals(
+                "[R][ ] project meeting (every week)",
                 tasks.get(0).toString()
         );
     }

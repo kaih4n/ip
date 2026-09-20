@@ -45,10 +45,12 @@ public class Parser {
                 return new DeleteCommand(arguments);
             case "find":
                 return new FindCommand(arguments);
+            case "repeat":
+                return new RecurringTaskCommand(arguments);
             default:
                 throw new SioetException(
                         "I don't recognise that command. Try list, todo, deadline, "
-                                + "event, mark, or unmark.");
+                                + "event, mark, unmark, repeat or find");
         }
     }
 
@@ -76,6 +78,8 @@ public class Parser {
             return "delete";
         } else if (command.equals("find") || command.startsWith("find ")) {
             return "find";
+        } else if (command.equals("repeat") || command.startsWith("repeat ")) {
+            return "repeat";
         } else {
             throw new SioetException(
                     "I don't recognise that command. Try list, todo, deadline, "
