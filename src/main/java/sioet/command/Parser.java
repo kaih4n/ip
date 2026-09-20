@@ -49,8 +49,7 @@ public class Parser {
                 return new RecurringTaskCommand(arguments);
             default:
                 throw new SioetException(
-                        "I don't recognise that command. Try list, todo, deadline, "
-                                + "event, mark, unmark, repeat or find");
+                        "I don't recognise that command. Try list, todo, deadline, event, mark, unmark, repeat or find.");
         }
     }
 
@@ -82,8 +81,7 @@ public class Parser {
             return "repeat";
         } else {
             throw new SioetException(
-                    "I don't recognise that command. Try list, todo, deadline, "
-                            + "event, mark, unmark or find.");
+                    "I don't recognise that command. Try list, todo, deadline, event, mark, unmark, repeat or find.");
         }
     }
 
