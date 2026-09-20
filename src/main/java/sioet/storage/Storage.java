@@ -5,6 +5,7 @@ import sioet.task.Event;
 import sioet.task.TaskList;
 import sioet.task.Task;
 import sioet.task.Todo;
+import sioet.task.RecurringTask;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,6 +50,10 @@ public class Storage {
                             + " | " + task.getDescription()
                             + " | " + event.getFrom().format(DATE_TIME_FORMATTER)
                             + " | " + event.getTo().format(DATE_TIME_FORMATTER));
+                } else if (task instanceof RecurringTask recurringTask) {
+                    lines.add("R | " + (task.isDone() ? "1" : "0")
+                            + " | " + task.getDescription()
+                            + " | " + recurringTask.getRecurrence());
                 }
             }
 
@@ -99,6 +104,11 @@ public class Storage {
                                 description,
                                 LocalDateTime.parse(parts[3], DATE_TIME_FORMATTER),
                                 LocalDateTime.parse(parts[4], DATE_TIME_FORMATTER)
+                        );
+                    } else if (type.equals("R") && parts.length == 4) {
+                        task = new RecurringTask(
+                                description,
+                                parts[3]
                         );
                     } else {
                         continue;
