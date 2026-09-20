@@ -1,0 +1,4 @@
+T | 1 | read chapter 5
+R | 0 | project meeting | week
+E | 0 | party | 1/1/2001 1111 | 1/1/2001 1311
+T | 1 | read chapter 6
