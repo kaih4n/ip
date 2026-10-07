@@ -1,8 +1,8 @@
 package sioet.command;
 
+import sioet.storage.Storage;
 import sioet.task.TaskList;
 import sioet.ui.Ui;
-import sioet.storage.Storage;
 
 /**
  * Represents the command that exits sioet.ui.Sioet.
@@ -12,8 +12,8 @@ public class ExitCommand extends Command {
     /**
      * Executes the exit command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      */
     @Override

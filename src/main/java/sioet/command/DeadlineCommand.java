@@ -1,13 +1,13 @@
 package sioet.command;
 
+import java.time.LocalDateTime;
+
+import sioet.SioetException;
+import sioet.storage.Storage;
 import sioet.task.Deadline;
+import sioet.task.Task;
 import sioet.task.TaskList;
 import sioet.ui.Ui;
-import sioet.storage.Storage;
-import sioet.SioetException;
-import sioet.task.Task;
-
-import java.time.LocalDateTime;
 
 /**
  * Represents the command that adds a deadline task.
@@ -27,8 +27,8 @@ public class DeadlineCommand extends Command {
     /**
      * Executes the deadline command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      * @throws SioetException if the deadline format is invalid
      */

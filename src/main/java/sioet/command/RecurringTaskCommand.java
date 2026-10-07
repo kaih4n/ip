@@ -25,8 +25,8 @@ public class RecurringTaskCommand extends Command {
     /**
      * Executes the recurring task command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      * @throws SioetException if the recurring task format is invalid
      */

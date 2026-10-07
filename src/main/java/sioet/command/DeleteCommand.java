@@ -1,12 +1,12 @@
 package sioet.command;
 
+import java.util.Arrays;
+
+import sioet.SioetException;
+import sioet.storage.Storage;
+import sioet.task.Task;
 import sioet.task.TaskList;
 import sioet.ui.Ui;
-import sioet.storage.Storage;
-import sioet.SioetException;
-import sioet.task.Task;
-
-import java.util.Arrays;
 
 /**
  * Represents the command that deletes tasks.
@@ -26,8 +26,8 @@ public class DeleteCommand extends Command {
     /**
      * Executes the delete command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      * @throws SioetException if the task numbers are invalid
      */

@@ -1,11 +1,11 @@
 package sioet.command;
 
-import sioet.task.TaskList;
-import sioet.ui.Ui;
+import sioet.SioetException;
 import sioet.storage.Storage;
 import sioet.task.Task;
+import sioet.task.TaskList;
 import sioet.task.Todo;
-import sioet.SioetException;
+import sioet.ui.Ui;
 
 /**
  * Represents the command that adds a todo task.
@@ -25,8 +25,8 @@ public class TodoCommand extends Command {
     /**
      * Executes the todo command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      * @throws SioetException if the description is empty
      */

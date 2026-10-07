@@ -1,22 +1,20 @@
 package sioet.storage;
 
-import sioet.task.Deadline;
-import sioet.task.Event;
-import sioet.task.TaskList;
-import sioet.task.Task;
-import sioet.task.Todo;
-import sioet.task.RecurringTask;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import sioet.task.Deadline;
+import sioet.task.Event;
+import sioet.task.RecurringTask;
+import sioet.task.Task;
+import sioet.task.TaskList;
+import sioet.task.Todo;
 
 /**
  * Handles saving tasks to the hard disk.

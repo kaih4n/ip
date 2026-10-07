@@ -15,8 +15,8 @@ public class Event extends Task {
      * Creates an event task with its description, start time, and end time.
      *
      * @param description the event description
-     * @param from the start date and time
-     * @param to the end date and time
+     * @param from        the start date and time
+     * @param to          the end date and time
      */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);

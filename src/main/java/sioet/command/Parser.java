@@ -1,10 +1,10 @@
 package sioet.command;
 
-import sioet.SioetException;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import sioet.SioetException;
 
 /**
  * Parses user commands entered into sioet.ui.Sioet.
@@ -49,7 +49,8 @@ public class Parser {
                 return new RecurringTaskCommand(arguments);
             default:
                 throw new SioetException(
-                        "I don't recognise that command. Try list, todo, deadline, event, mark, unmark, repeat or find.");
+                        "I don't recognise that command. Try list, todo, deadline, event, "
+                        + "mark, unmark, repeat or find.");
         }
     }
 
@@ -81,7 +82,8 @@ public class Parser {
             return "repeat";
         } else {
             throw new SioetException(
-                    "I don't recognise that command. Try list, todo, deadline, event, mark, unmark, repeat or find.");
+                    "I don't recognise that command. Try list, todo, deadline, event, mark, "
+                    + "unmark, repeat or find.");
         }
     }
 

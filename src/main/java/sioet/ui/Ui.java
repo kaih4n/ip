@@ -1,10 +1,10 @@
 package sioet.ui;
 
-import sioet.task.Task;
-import sioet.task.TaskList;
-
 import java.util.List;
 import java.util.Scanner;
+
+import sioet.task.Task;
+import sioet.task.TaskList;
 
 /**
  * Handles interactions between sioet.ui.Sioet and the user.
@@ -37,6 +37,9 @@ public class Ui {
         System.out.println(BLUE + lastResponse + RESET);
     }
 
+    /**
+     * Displays the welcome message and banner to the user.
+     */
     public void showWelcome() {
         String horizontalBorder = "═".repeat(30);
         String banner = "╔" + horizontalBorder + "╗\n"
@@ -60,6 +63,11 @@ public class Ui {
                 + " ".repeat(30 - content.length()) + "║\n";
     }
 
+    /**
+     * Reads the next command entered by the user.
+     *
+     * @return the command entered by the user, or null if there is no input
+     */
     public String readCommand() {
         System.out.print(GREEN + "You: " + RESET);
         System.out.flush();
@@ -71,22 +79,43 @@ public class Ui {
         return scanner.nextLine();
     }
 
+    /**
+     * Displays the goodbye message to the user.
+     */
     public void showBye() {
         lastResponse = "Bye! Hope to see you again soon!";
         showResponse();
     }
 
+    /**
+     * Displays an error message to the user.
+     *
+     * @param message the error message to display
+     */
     public void showError(String message) {
         lastResponse = "I couldn't do that: " + message;
         showResponse();
     }
 
+    /**
+     * Displays a confirmation that a task was added.
+     *
+     * @param task the task that was added
+     * @param taskCount the number of tasks currently in the list
+     */
     public void showTaskAdded(Task task, int taskCount) {
         lastResponse = "Got it. I've added this task:\n  " + task
                 + "\nNow you have " + taskCount + " tasks in the list.";
         showResponse();
     }
 
+    /**
+     * Displays a confirmation that tasks were deleted.
+     *
+     * @param deletedTasks the tasks that were deleted
+     * @param numberOfDeletedTasks the number of tasks deleted
+     * @param taskCount the number of tasks remaining
+     */
     public void showTasksDeleted(String deletedTasks,
                                  int numberOfDeletedTasks,
                                  int taskCount) {
@@ -103,6 +132,11 @@ public class Ui {
         showResponse();
     }
 
+    /**
+     * Displays all tasks in the task list.
+     *
+     * @param tasks the list of tasks to display
+     */
     public void showTasks(TaskList tasks) {
         StringBuilder response = new StringBuilder(
                 "Here are the tasks in your list:\n");
@@ -119,6 +153,11 @@ public class Ui {
         showResponse();
     }
 
+    /**
+     * Displays tasks matching a search query.
+     *
+     * @param matchingTasks the matching tasks to display
+     */
     public void showMatchingTasks(List<Task> matchingTasks) {
         if (matchingTasks.isEmpty()) {
             lastResponse = "No matching tasks found.";
@@ -141,6 +180,13 @@ public class Ui {
         showResponse();
     }
 
+    /**
+     * Displays a confirmation that tasks were marked or unmarked.
+     *
+     * @param markedTasks the tasks that were marked or unmarked
+     * @param numberOfMarkedTasks the number of tasks affected
+     * @param shouldMarkDone whether the tasks were marked as done
+     */
     public void showTasksMarked(String markedTasks,
                                 int numberOfMarkedTasks,
                                 boolean shouldMarkDone) {

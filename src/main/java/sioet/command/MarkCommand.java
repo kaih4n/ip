@@ -1,10 +1,10 @@
 package sioet.command;
 
+import sioet.SioetException;
+import sioet.storage.Storage;
+import sioet.task.Task;
 import sioet.task.TaskList;
 import sioet.ui.Ui;
-import sioet.storage.Storage;
-import sioet.SioetException;
-import sioet.task.Task;
 
 /**
  * Represents the command that marks or unmarks tasks.
@@ -17,7 +17,7 @@ public class MarkCommand extends Command {
      * Creates a mark or unmark command.
      *
      * @param taskNumbersText comma-separated task numbers
-     * @param shouldMarkDone whether the tasks should be marked as done
+     * @param shouldMarkDone  whether the tasks should be marked as done
      */
     public MarkCommand(String taskNumbersText, boolean shouldMarkDone) {
         this.taskNumbersText = taskNumbersText;
@@ -27,8 +27,8 @@ public class MarkCommand extends Command {
     /**
      * Executes the mark or unmark command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      * @throws SioetException if the task numbers are invalid
      */
