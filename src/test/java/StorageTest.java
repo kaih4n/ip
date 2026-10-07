@@ -1,30 +1,27 @@
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import sioet.storage.Storage;
-import sioet.task.Deadline;
-import sioet.task.Event;
-import sioet.task.TaskList;
-import sioet.task.Todo;
-import sioet.task.RecurringTask;
+package sioet.task;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+import sioet.storage.Storage;
 
 /**
  * Tests saving and loading tasks to the hard disk.
  */
 public class StorageTest {
-    private final Storage storage = new Storage();
     private static final Path FILE_PATH = Path.of("data", "sioet.txt");
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+    private final Storage storage = new Storage();
 
     /**
      * Removes the saved file after each test.
@@ -282,7 +279,8 @@ public class StorageTest {
 
         TaskList tasks = storage.load();
 
-        assertEquals(0, tasks.size());    }
+        assertEquals(0, tasks.size());
+    }
 
     /**
      * Tests that blank lines in the data file are ignored.

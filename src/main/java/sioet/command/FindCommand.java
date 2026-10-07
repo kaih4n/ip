@@ -1,12 +1,12 @@
 package sioet.command;
 
+import java.util.List;
+
 import sioet.SioetException;
 import sioet.storage.Storage;
 import sioet.task.Task;
 import sioet.task.TaskList;
 import sioet.ui.Ui;
-
-import java.util.List;
 
 /**
  * Represents the command that searches for tasks containing a keyword.
@@ -31,8 +31,8 @@ public class FindCommand extends Command {
     /**
      * Executes the find command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      */
     @Override

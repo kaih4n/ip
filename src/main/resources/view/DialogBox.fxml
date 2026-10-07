@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
-
 <fx:root alignment="TOP_RIGHT"
          maxHeight="1.7976931348623157E308"
          maxWidth="1.7976931348623157E308"
@@ -21,14 +20,14 @@
                text="Dialog"
                wrapText="true"
                maxWidth="280.0"
-               styleClass="dialog-label" />
+               styleClass="dialog-label"/>
 
         <ImageView fx:id="displayPicture"
                    fitHeight="45.0"
                    fitWidth="45.0"
                    pickOnBounds="true"
                    preserveRatio="true"
-                   id="displayPicture" />
+                   id="displayPicture"/>
 
     </children>
 
@@ -36,7 +35,7 @@
         <Insets bottom="10.0"
                 left="12.0"
                 right="12.0"
-                top="10.0" />
+                top="10.0"/>
     </padding>
 
 </fx:root>

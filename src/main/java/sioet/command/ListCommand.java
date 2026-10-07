@@ -1,8 +1,8 @@
 package sioet.command;
 
+import sioet.storage.Storage;
 import sioet.task.TaskList;
 import sioet.ui.Ui;
-import sioet.storage.Storage;
 
 /**
  * Represents the command that displays all tasks.
@@ -12,8 +12,8 @@ public class ListCommand extends Command {
     /**
      * Executes the list command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      */
     @Override

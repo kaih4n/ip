@@ -1,11 +1,11 @@
 
-import org.junit.jupiter.api.Test;
-import sioet.task.Event;
-
-import java.time.LocalDateTime;
+package sioet.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
 public class EventTest {
 
     @Test

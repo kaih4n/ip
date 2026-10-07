@@ -29,7 +29,7 @@ public class DialogBox extends HBox {
      * Creates a dialog box.
      *
      * @param text the text displayed in the dialog box
-     * @param img the image displayed beside the dialog
+     * @param img  the image displayed beside the dialog
      */
     private DialogBox(String text, Image img) {
         try {
@@ -69,7 +69,7 @@ public class DialogBox extends HBox {
      * Creates a dialog box for the user.
      *
      * @param text the user's message
-     * @param img the user's image
+     * @param img  the user's image
      * @return the user dialog box
      */
     public static DialogBox getUserDialog(String text, Image img) {
@@ -82,7 +82,7 @@ public class DialogBox extends HBox {
      * Creates a dialog box for Sioet.
      *
      * @param text Sioet's response
-     * @param img Sioet's image
+     * @param img  Sioet's image
      * @return Sioet's dialog box
      */
     public static DialogBox getSioetDialog(String text, Image img) {

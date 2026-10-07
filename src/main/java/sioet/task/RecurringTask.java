@@ -10,7 +10,7 @@ public class RecurringTask extends Task {
      * Creates a recurring task with the given description and recurrence.
      *
      * @param description the task description
-     * @param recurrence the recurrence interval
+     * @param recurrence  the recurrence interval
      */
     public RecurringTask(String description, String recurrence) {
         super(description);

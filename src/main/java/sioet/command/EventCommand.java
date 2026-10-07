@@ -1,13 +1,13 @@
 package sioet.command;
 
-import sioet.task.TaskList;
-import sioet.task.Task;
-import sioet.task.Event;
-import sioet.ui.Ui;
-import sioet.storage.Storage;
-import sioet.SioetException;
-
 import java.time.LocalDateTime;
+
+import sioet.SioetException;
+import sioet.storage.Storage;
+import sioet.task.Event;
+import sioet.task.Task;
+import sioet.task.TaskList;
+import sioet.ui.Ui;
 
 /**
  * Represents the command that adds an event task.
@@ -27,8 +27,8 @@ public class EventCommand extends Command {
     /**
      * Executes the event command.
      *
-     * @param tasks the task list
-     * @param ui the user interface
+     * @param tasks   the task list
+     * @param ui      the user interface
      * @param storage the task storage
      * @throws SioetException if the event format is invalid
      */
