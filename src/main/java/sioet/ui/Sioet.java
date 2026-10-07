@@ -18,6 +18,7 @@ public class Sioet extends Application {
     private static final Storage storage = new Storage();
     private static final TaskList tasks = storage.load();
     private static final Ui ui = new Ui();
+    private boolean lastResponseWasError;
 
     /**
      * Starts the JavaFX GUI.
@@ -83,11 +84,22 @@ public class Sioet extends Application {
             Command parsedCommand = Parser.parse(command);
             parsedCommand.execute(tasks, ui, storage);
 
+            lastResponseWasError = false;
             return ui.getLastResponse();
 
         } catch (SioetException exception) {
             ui.showError(exception.getMessage());
+            lastResponseWasError = true;
             return ui.getLastResponse();
         }
+    }
+
+    /**
+     * Checks whether the last GUI response was an error.
+     *
+     * @return true if the last response was an error
+     */
+    public boolean wasLastResponseAnError() {
+        return lastResponseWasError;
     }
 }
