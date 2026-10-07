@@ -56,6 +56,10 @@ public class EventCommand extends Command {
         LocalDateTime from = Parser.parseDateTime(fromText);
         LocalDateTime to = Parser.parseDateTime(toText);
 
+        if (!from.isBefore(to)) {
+            throw new SioetException("The event start time must be before the end time.");
+        }
+
         Task task = new Event(description, from, to);
         tasks.add(task);
         storage.save(tasks);

@@ -1,6 +1,8 @@
 package sioet.command;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import sioet.SioetException;
 import sioet.storage.Storage;
@@ -55,6 +57,14 @@ public class DeleteCommand extends Command {
                     || taskIndexes[index] >= tasks.size()) {
                 throw new SioetException(
                         "One or more task numbers are not in your list.");
+            }
+        }
+
+        Set<Integer> uniqueIndexes = new HashSet<>();
+
+        for (int index : taskIndexes) {
+            if (!uniqueIndexes.add(index)) {
+                throw new SioetException("You cannot specify the same task more than once.");
             }
         }
 

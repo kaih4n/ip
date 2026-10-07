@@ -21,7 +21,7 @@ public class FindCommand extends Command {
      * @throws SioetException if no keyword is provided
      */
     public FindCommand(String keyword) throws SioetException {
-        if (keyword.isEmpty()) {
+        if (keyword.isBlank()) {
             throw new SioetException("Please provide a keyword to search for.");
         }
 
