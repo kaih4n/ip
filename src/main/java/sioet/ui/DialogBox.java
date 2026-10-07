@@ -90,4 +90,18 @@ public class DialogBox extends HBox {
         db.flip();
         return db;
     }
+
+    /**
+     * Creates a dialog box for an error response.
+     *
+     * @param text the error message
+     * @param img  Sioet's image
+     * @return the error dialog box
+     */
+    public static DialogBox getErrorDialog(String text, Image img) {
+        DialogBox db = new DialogBox(text, img);
+        db.flip();
+        db.dialog.getStyleClass().add("error-label");
+        return db;
+    }
 }

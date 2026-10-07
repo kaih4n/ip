@@ -56,9 +56,13 @@ public class MainWindow extends AnchorPane {
 
         String response = sioet.getResponse(input);
 
+        DialogBox sioetDialog = sioet.wasLastResponseAnError()
+                ? DialogBox.getErrorDialog(response, sioetImage)
+                : DialogBox.getSioetDialog(response, sioetImage);
+
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getSioetDialog(response, sioetImage)
+                sioetDialog
         );
 
         userInput.clear();
