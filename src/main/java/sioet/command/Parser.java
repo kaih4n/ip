@@ -21,6 +21,8 @@ public class Parser {
      * @throws SioetException if the command is not recognised
      */
     public static Command parse(String command) throws SioetException {
+        command = command.trim();
+
         if (command.equals("bye")) {
             return new ExitCommand();
         }
